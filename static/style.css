@@ -1,0 +1,54 @@
+:root{font-family:Inter,system-ui,-apple-system,sans-serif;color:#f1f3f7;background:#0c1018}*{box-sizing:border-box}body{margin:0}main{max-width:850px;margin:auto;padding:50px 20px}header{margin-bottom:32px}.eyebrow{color:#9caaf5;font-size:12px;letter-spacing:.14em;font-weight:700}h1{font-size:clamp(36px,7vw,60px);letter-spacing:-.05em;margin:12px 0}h2{font-size:22px;margin:0 0 8px}p{color:#aeb7c7;line-height:1.5}.panel,#output{background:#161d29;border:1px solid #30394b;border-radius:18px;padding:26px;margin:24px 0}.panel h2:not(:first-child){margin-top:32px}.url-row{display:flex;align-items:center;gap:12px;margin:10px 0}.url-row span{color:#7f8ba0;width:18px}input[type=url]{width:100%;padding:13px;background:#0c121c;color:white;border:1px solid #3a465b;border-radius:9px;font-size:15px}.weight{margin:20px 0}.weight-top,.total{display:flex;justify-content:space-between;gap:12px;align-items:center}.weight-top output{font-weight:700;color:#c3cbff}input[type=range]{width:100%;accent-color:#9ba9ff;margin-top:12px}.total{border-top:1px solid #30394b;padding-top:18px;flex-wrap:wrap}.good{color:#6cdbb5}.bad,#error{color:#ff9494}button{cursor:pointer;border:0;border-radius:9px;font-weight:700;padding:12px 16px}button.primary{width:100%;background:#9ba9ff;color:#111827;margin-top:22px;font-size:16px}button:disabled{opacity:.55;cursor:wait}button.secondary{background:#30394b;color:#f1f3f7;margin-left:8px}.track{display:flex;gap:14px;padding:20px 0;border-bottom:1px solid #30394b}.rank{color:#8f9ab1;font-weight:700;min-width:36px}.track-body{flex:1;min-width:0}.track a{color:#f1f3f7;font-weight:700;text-decoration:none}.track a:hover{text-decoration:underline}.muted,.breakdown{font-size:12px;color:#9ba7ba;margin-top:6px}.reason{font-size:13px;color:#b4c2ff;margin-top:8px}.score{font-size:26px;font-weight:800;color:#9ba9ff}.score small{font-size:12px;color:#9ba7ba}details{margin-top:25px;color:#aeb7c7}footer{text-align:center;color:#77849a;font-size:12px;margin:40px 0}@media(max-width:600px){.panel,#output{padding:17px}.score{font-size:20px}.track{gap:8px}.total button{margin:8px 4px 0 0}}
+.soundcloud-player {
+  width: 100%;
+  grid-column: 1 / -1;
+  margin-top: 12px;
+}
+
+.soundcloud-player iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 8px;
+}
+
+/* Keep track information above the SoundCloud player */
+.track {
+  display: grid;
+  grid-template-columns: 45px minmax(0, 1fr) 85px;
+  align-items: start;
+  gap: 12px;
+}
+
+/* Allow the track details to use available width */
+.track-body {
+  min-width: 0;
+  grid-column: 2;
+}
+
+/* Keep ranking on the left */
+.track .rank {
+  grid-column: 1;
+}
+
+/* Keep score on the right */
+.track .score {
+  grid-column: 3;
+  text-align: right;
+}
+
+/* Player spans the entire width below the details */
+.soundcloud-player {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  width: 100%;
+  margin-top: 4px;
+}
+
+/* Embedded player fills the available width */
+.soundcloud-player iframe {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+}
