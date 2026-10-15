@@ -93,6 +93,73 @@ def track_score(track, endorsements, artist_tags):
 def home():
     return (ROOT/'templates'/'index.html').read_text()
 
+
+@app.get('/api/artists/search')
+def search_artists(q: str = ''):
+    q = q.strip()
+    if len(q) < 2:
+        return {'artists': []}
+    if len(q) > 100:
+        raise HTTPException(400, 'Search text is too long')
+
+    payload, status = sc_get('/users', {'q': q, 'limit': 50})
+
+    if status != 200:
+        raise HTTPException(
+            502,
+            f'SoundCloud artist search unavailable (HTTP {status}). '
+            'Use the profile URL option instead.'
+        )
+
+    found = []
+    query = q.casefold()
+
+    for user in items(payload):
+        if not isinstance(user, dict):
+            continue
+
+        url = user.get('permalink_url')
+        if not isinstance(url, str) or not valid_url(url):
+            continue
+
+        name = user.get('username') or 'Unknown'
+        username = user.get('permalink') or url.rstrip('/').split('/')[-1]
+
+        followers = user.get('followers_count')
+        try:
+            followers = int(followers) if followers is not None else None
+        except (TypeError, ValueError):
+            followers = None
+
+        exact_match = (
+            name.casefold() == query
+            or username.casefold() == query
+        )
+
+        found.append({
+            'id': str(user.get('id') or ''),
+            'name': name,
+            'url': url,
+            'avatar': user.get('avatar_url'),
+            'followers': followers,
+            '_exact': exact_match
+        })
+
+    # Exact matches first, then highest follower count.
+    found.sort(
+        key=lambda artist: (
+            not artist['_exact'],
+            -(artist['followers'] if artist['followers'] is not None else -1)
+        )
+    )
+
+    # Remove internal sorting field.
+    for artist in found:
+        artist.pop('_exact', None)
+
+    return {'artists': found}
+
+
 @app.post('/api/discover')
 def discover(req: SearchRequest):
     if len(set(req.urls)) != len(req.urls) or not all(valid_url(x) for x in req.urls):
